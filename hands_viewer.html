@@ -105,7 +105,7 @@
 
                 for (h = 0; h < data.hands.length; h++) {
                     var hand = new Hand(data.hands[h]);
-                    console.log(isA(hand));
+                    console.log("isA: " + isA(hand));
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
                     var baseY = joints[0].positionImage.y;
@@ -175,9 +175,23 @@
             };
 
             function isA(hand){
-                if (hand.thumb.isPointedStraightUp()){
-                    console.log("thumb is pointed upward");
+                if (hand.thumb.isPointedUp() && hand.thumb.isVertical()){
+                    console.log("isA: thumb is pointed straight upward");
+                    if (hand.index.isFolded()) {
+                        console.log("isA: index is folded");
+                        if (hand.middle.isFolded()) {
+                            console.log("isA: middle is folded");
+                            if (hand.ring.isFolded()) {
+                                console.log("isA: ring is folded");
+                                if (hand.pinky.isFolded()) {
+                                    console.log("isA: pinky is folded");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
+                return false;
             }
 
             function Joint(joint){
@@ -195,21 +209,27 @@
 
             function Hand (hand){
                 var copyOfJoints = hand.trackedJoint.clone();
-                this.thumb = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[0]);
-                this.index = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[1]);
-                this.middle = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[2]);
-                this.ring = new Finger(copyOfJoints.splice(2, 4)), hand.fingerData[3];
-                this.pinky = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[4]);
+                this.thumb = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[0].foldedness);
+                this.index = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[1].foldedness);
+                this.middle = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[2].foldedness);
+                this.ring = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[3].foldedness);
+                this.pinky = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[4].foldedness);
             }
+
             Finger.prototype.isPointedUp = function() {
                 return this.tip.y < this.c.y && this.c.y < this.b.y && this.b.y < this.a.y;
             };
 
-            Finger.prototype.isPointedStraightUp = function() {
-                console.log()
+            Finger.prototype.isFolded = function() {
+                console.log("is folded: " + this.foldedness);
+                return this.foldedness < 20;
+            };
+
+            Finger.prototype.isVertical = function() {
                 var min = Math.min(Math.min(Math.min(this.tip.x, this.c.x), this.b.x), this.a.x);
                 var avgDiff = ((this.tip.x - min) + (this.c.x - min) + (this.b.x - min) + (this.a.x - min))/4;
-                console.log(avgDiff);
+                return avgDiff < 20;
+
             };
 
         });
