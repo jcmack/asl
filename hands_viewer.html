@@ -104,7 +104,8 @@
                 if (data.hands == undefined) return;
 
                 for (h = 0; h < data.hands.length; h++) {
-                    console.log(new Hand(data.hands[h]));
+                    var hand = new Hand(data.hands[h]);
+                    console.log(isA(hand));
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
                     var baseY = joints[0].positionImage.y;
@@ -173,6 +174,12 @@
                 return arr;
             };
 
+            function isA(hand){
+                if (hand.thumb.isPointedStraightUp()){
+                    console.log("thumb is pointed upward");
+                }
+            }
+
             function Joint(joint){
                 this.x = joint.positionImage.x;
                 this.y = joint.positionImage.y;
@@ -186,16 +193,25 @@
                 this.foldedness = foldedness;
             }
 
-            function Hand (hand) {
-                console.log("hello");
+            function Hand (hand){
                 var copyOfJoints = hand.trackedJoint.clone();
                 this.thumb = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[0]);
-                console.log("thumb " + hand.fingerData[0].foldedness);
                 this.index = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[1]);
                 this.middle = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[2]);
                 this.ring = new Finger(copyOfJoints.splice(2, 4)), hand.fingerData[3];
                 this.pinky = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[4]);
             }
+            Finger.prototype.isPointedUp = function() {
+                return this.tip.y < this.c.y && this.c.y < this.b.y && this.b.y < this.a.y;
+            };
+
+            Finger.prototype.isPointedStraightUp = function() {
+                console.log()
+                var min = Math.min(Math.min(Math.min(this.tip.x, this.c.x), this.b.x), this.a.x);
+                var avgDiff = ((this.tip.x - min) + (this.c.x - min) + (this.b.x - min) + (this.a.x - min))/4;
+                console.log(avgDiff);
+            };
+
         });
     </script>
 </head>
