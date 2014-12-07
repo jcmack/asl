@@ -105,7 +105,8 @@
 
                 for (h = 0; h < data.hands.length; h++) {
                     var hand = new Hand(data.hands[h]);
-                    console.log("isA: " + isA(hand));
+                    console.log("isA: " + hand.isA());
+                    console.log("isB: " + hand.isB());
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
                     var baseY = joints[0].positionImage.y;
@@ -174,26 +175,6 @@
                 return arr;
             };
 
-            function isA(hand){
-                if (hand.thumb.isPointedUp() && hand.thumb.isVertical()){
-                    console.log("isA: thumb is pointed straight upward");
-                    if (hand.index.isFolded()) {
-                        console.log("isA: index is folded");
-                        if (hand.middle.isFolded()) {
-                            console.log("isA: middle is folded");
-                            if (hand.ring.isFolded()) {
-                                console.log("isA: ring is folded");
-                                if (hand.pinky.isFolded()) {
-                                    console.log("isA: pinky is folded");
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
-
             function Joint(joint){
                 this.x = joint.positionImage.x;
                 this.y = joint.positionImage.y;
@@ -231,6 +212,50 @@
                 return avgDiff < 20;
 
             };
+
+            Hand.prototype.isA = function() {
+                if (this.thumb.isPointedUp() && this.thumb.isVertical()){
+                    console.log("isA: thumb is pointed straight upward");
+                    if (this.index.isFolded()) {
+                        console.log("isA: index is folded");
+                        if (this.middle.isFolded()) {
+                            console.log("isA: middle is folded");
+                            if (this.ring.isFolded()) {
+                                console.log("isA: ring is folded");
+                                if (this.pinky.isFolded()) {
+                                    console.log("isA: pinky is folded");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+            Hand.prototype.isB = function() {
+                console.log("thumb height diff: " + Math.abs(this.thumb.tip.y - this.thumb.c.y));
+                console.log("thumb foldedness: " + this.thumb.foldedness);
+                if (this.index.isPointedUp() && this.index.isVertical()){
+                    console.log("isB: index is pointed straight upward");
+                    if (this.middle.isPointedUp() && this.middle.isVertical()){
+                        console.log("isB: middle is pointed straight upward");
+                        if (this.ring.isPointedUp() && this.ring.isVertical()){
+                            console.log("isB: ring is pointed straight upward");
+                            if (this.pinky.isPointedUp() && this.pinky.isVertical()){
+                                console.log("isB: pinky is pointed straight upward");
+                                var thumbHeightDiff = Math.abs(this.thumb.tip.y - this.thumb.c.y);
+                                if(thumbHeightDiff < 15){
+                                    console.log("isB: thumb is bent");
+                                }
+                            }
+                        }
+                    }
+
+                }
+                return false;
+            };
+
 
         });
     </script>
