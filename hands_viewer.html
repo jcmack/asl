@@ -109,7 +109,8 @@
                     //console.log("isB: " + hand.isB());
                     //console.log("isC: " + hand.isC());
                     //console.log("isD: " + hand.isD());
-                    console.log("isE: " + hand.isE());
+                    //console.log("isE: " + hand.isE());
+                    console.log("isF: " + hand.isF());
                     //console.log(data.hands[h]);
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
@@ -302,7 +303,6 @@
             };
 
             Hand.prototype.isE = function() {
-                console.log("isE: " + this.openness);
                 if (this.openness < 20) {
                     console.log("isE: fingers are closed");
                     if (this.thumb.isFolded()) {
@@ -310,6 +310,27 @@
                         return true;
                     }
                 }
+                return false;
+            };
+
+            Hand.prototype.isF = function() {
+                if (this.pinky.isPointedUp()) {
+                    console.log("isF: pinky is pointed upward");
+                    if (this.ring.isPointedUp()) {
+                        console.log("isF: ring is pointed upward");
+                        if (this.middle.isPointedUp()) {
+                            console.log("isF: middle is pointed upward");
+                            if (this.thumb.isFolded()) {
+                                console.log("isF: thumb is folded");
+                                if (this.index.isFolded()) {
+                                    console.log("isF: index is folded");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 return false;
             };
         });
