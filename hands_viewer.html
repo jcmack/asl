@@ -108,7 +108,8 @@
                     //console.log("isA: " + hand.isA());
                     //console.log("isB: " + hand.isB());
                     //console.log("isC: " + hand.isC());
-                    console.log("isD: " + hand.isD());
+                    //console.log("isD: " + hand.isD());
+                    console.log("isE: " + hand.isE());
                     //console.log(data.hands[h]);
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
@@ -296,6 +297,15 @@
                             }
                         }
                     }
+                }
+                return false;
+            };
+
+            Hand.prototype.isE = function() {
+                console.log("isE: " + this.openness);
+                if (this.openness < 15) {
+                    console.log("isE: fingers are closed");
+                    return true;
                 }
                 return false;
             };
