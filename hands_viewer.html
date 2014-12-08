@@ -303,9 +303,12 @@
 
             Hand.prototype.isE = function() {
                 console.log("isE: " + this.openness);
-                if (this.openness < 15) {
+                if (this.openness < 20) {
                     console.log("isE: fingers are closed");
-                    return true;
+                    if (this.thumb.isFolded()) {
+                        console.log("isE: thumb is bent");
+                        return true;
+                    }
                 }
                 return false;
             };
