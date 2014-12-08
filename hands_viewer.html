@@ -110,7 +110,8 @@
                     //console.log("isC: " + hand.isC());
                     //console.log("isD: " + hand.isD());
                     //console.log("isE: " + hand.isE());
-                    console.log("isF: " + hand.isF());
+                    //console.log("isF: " + hand.isF());
+                    console.log("isG: " + hand.isG());
                     //console.log(data.hands[h]);
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
@@ -333,6 +334,23 @@
 
                 return false;
             };
+
+            Hand.prototype.isG = function() {
+                if (this.index.isPointedLeft() && this.index.isHorizontal()) {
+                    console.log("isG: index finger is horizontal and pointed to the left");
+
+                    var min = Math.min(Math.min(this.thumb.tip.y, this.thumb.c.y), this.thumb.b.y);
+                    var avgDiff = ((this.thumb.tip.y - min) + (this.thumb.c.y - min) + (this.thumb.b.y - min))/3;
+
+
+                    if (this.thumb.isPointedLeft() && avgDiff < 20) {
+                        console.log("isG: thumb is horizontal and pointed to the left");
+                       return true;
+                    }
+                }
+                return false;
+            };
+
         });
     </script>
 </head>
