@@ -113,7 +113,10 @@
                     //console.log("isF: " + hand.isF());
                     //console.log("isG: " + hand.isG());
                     //console.log("isH: " + hand.isH());
-                    console.log("isI: " + hand.isI());
+                    //console.log("isI: " + hand.isI());
+                    //console.log("isJ: " + hand.isJ());
+                    //console.log("isK: " + hand.isK());
+                    console.log("isL: " + hand.isL());
                     //console.log("isS: " + hand.isS());
                     //console.log(data.hands[h]);
                     var joints = data.hands[h].trackedJoint;
@@ -189,7 +192,8 @@
                 this.y = joint.positionImage.y;
             }
 
-            function Finger(joints, foldedness){
+            function Finger(name, joints, foldedness){
+                this.name = name;
                 this.a = new Joint(joints[0]);
                 this.b = new Joint(joints[1]);
                 this.c = new Joint(joints[2]);
@@ -199,11 +203,11 @@
 
             function Hand (hand){
                 var copyOfJoints = hand.trackedJoint.clone();
-                this.thumb = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[0].foldedness);
-                this.index = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[1].foldedness);
-                this.middle = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[2].foldedness);
-                this.ring = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[3].foldedness);
-                this.pinky = new Finger(copyOfJoints.splice(2, 4), hand.fingerData[4].foldedness);
+                this.thumb = new Finger("thumb", copyOfJoints.splice(2, 4), hand.fingerData[0].foldedness);
+                this.index = new Finger("index", copyOfJoints.splice(2, 4), hand.fingerData[1].foldedness);
+                this.middle = new Finger("middle", copyOfJoints.splice(2, 4), hand.fingerData[2].foldedness);
+                this.ring = new Finger("ring", copyOfJoints.splice(2, 4), hand.fingerData[3].foldedness);
+                this.pinky = new Finger("pinky", copyOfJoints.splice(2, 4), hand.fingerData[4].foldedness);
                 this.openness = hand.openness;
             }
 
@@ -401,6 +405,52 @@
                 }
                 return false;
             };
+
+            //isJ
+
+            Hand.prototype.isK = function() {
+                if(this.middle.isPointedUp()){
+                    console.log("isK: middle finger is pointed upward");
+                    if(this.index.isPointedUp()) {
+                        console.log("isK: index finger is pointed upward");
+                        if (this.index.tip.x - this.middle.tip.x > 90) {
+                            console.log("isK: index and middle finger form a V shape");
+                            if (this.thumb.isPointedUp() && this.thumb.isVertical()) {
+                                console.log("isK: thumb is pointed straight up");
+                                if (this.ring.isFolded()) {
+                                    console.log("isK: ring is folded");
+                                    if (this.pinky.isFolded()) {
+                                        console.log("isK: pinky is folded");
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+            Hand.prototype.isL = function() {
+                if(this.index.isPointedUp() && this.index.isVertical()){
+                    console.log("isL: index finger is pointed straight upward");
+                    if(this.thumb.isPointedLeft() && this.thumb.isHorizontal()) {
+                        console.log("isK: thumb is horizontal and pointed to the left");
+                        if (this.middle.isFolded()) {
+                            console.log("isK: middle is folded");
+                            if (this.ring.isFolded()) {
+                                console.log("isK: ring is folded");
+                                if (this.pinky.isFolded()) {
+                                    console.log("isK: pinky is folded");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
 
             Hand.prototype.isS = function() {
                 if (this.openness < 20) {
