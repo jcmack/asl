@@ -128,6 +128,7 @@
                     //console.log("isU: " + hand.isU());
                     //console.log("isV: " + hand.isV());
                     //console.log("isW: " + hand.isW());
+                    console.log("isX: " + hand.isX());
                     //console.log("isY: " + hand.isY());
                     //console.log(data.hands[h]);
                     var joints = data.hands[h].trackedJoint;
@@ -683,7 +684,26 @@
                 return false;
             };
 
-            //isX
+            Hand.prototype.isX = function() {
+                console.log(this.index.isPointedUp());
+                if (this.index.isPointedUp() && this.index.isFolded()){
+                    console.log("isD: index is slightly folded");
+                    if (this.thumb.isFolded()) {
+                        console.log("isD: thumb is folded");
+                        if (this.middle.isFolded()) {
+                            console.log("isD: middle is folded");
+                            if (this.ring.isFolded()) {
+                                console.log("isD: ring is folded");
+                                if (this.pinky.isFolded()) {
+                                    console.log("isD: pinky is folded");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
 
             Hand.prototype.isY = function() {
                 if(this.pinky.isPointedRight()){
