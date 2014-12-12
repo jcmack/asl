@@ -105,6 +105,7 @@
 
                 for (h = 0; h < data.hands.length; h++) {
                     var hand = new Hand(data.hands[h]);
+                    //console.log(data.hands[h]);
                     //console.log("isA: " + hand.isA());
                     //console.log("isB: " + hand.isB());
                     //console.log("isC: " + hand.isC());
@@ -116,8 +117,14 @@
                     //console.log("isI: " + hand.isI());
                     //console.log("isJ: " + hand.isJ());
                     //console.log("isK: " + hand.isK());
-                    console.log("isL: " + hand.isL());
+                    //console.log("isL: " + hand.isL());
+                    //console.log("isM: " + hand.isM());
+                    //console.log("isN: " + hand.isN());
+                    //console.log("isO: " + hand.isO());
                     //console.log("isS: " + hand.isS());
+                    //console.log("isU: " + hand.isU());
+                    //console.log("isV: " + hand.isV());
+                    console.log("isW: " + hand.isW());
                     //console.log(data.hands[h]);
                     var joints = data.hands[h].trackedJoint;
                     var baseX = joints[0].positionImage.x;
@@ -130,6 +137,7 @@
 
                         var x = joints[j].positionImage.x;
                         var y = joints[j].positionImage.y;
+                        var z = joints[j].positionWorld.z;
 
                         context.font="20px Georgia";
                         context.fillText(j, x + 5, y + 5 );
@@ -190,6 +198,7 @@
             function Joint(joint){
                 this.x = joint.positionImage.x;
                 this.y = joint.positionImage.y;
+                this.z = joint.positionWorld.z;
             }
 
             function Finger(name, joints, foldedness){
@@ -451,6 +460,72 @@
                 return false;
             };
 
+            Hand.prototype.isM = function() {
+                if (this.pinky.isFolded()) {
+                    console.log("isM: pinky is folded");
+                    if (this.ring.isFolded()) {
+                        console.log("isM: ring is folded");
+                        if (this.middle.isFolded()) {
+                            console.log("isM: middle is folded");
+                            if (this.index.isFolded()) {
+                                console.log("isM: index is folded");
+                                //thumb is lower than ring, middle and index's b joint.
+                                if(this.thumb.tip.y > this.ring.b.y
+                                        && this.thumb.tip.y > this.middle.b.y - 5
+                                        && this.thumb.tip.y > this.index.b.y - 5
+                                        && this.thumb.tip.y < this.pinky.b.y) {
+                                    console.log("isM: thumb is tucked");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+            Hand.prototype.isN = function() {
+                if (this.pinky.isFolded()) {
+                    console.log("isN: pinky is folded");
+                    if (this.ring.isFolded()) {
+                        console.log("isN: ring is folded");
+                        if (this.middle.isFolded()) {
+                            console.log("isN: middle is folded");
+                            if (this.index.isFolded()) {
+                                console.log("isN: index is folded");
+                                //thumb is lower than middle and index's b joint.
+                                if(this.thumb.tip.y > this.middle.b.y - 5
+                                        && this.thumb.tip.y > this.index.b.y - 5
+                                        && this.thumb.tip.y < this.ring.b.y
+                                        && this.thumb.tip.y < this.pinky.b.y) {
+                                    console.log("isN: thumb is tucked");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+            Hand.prototype.isO = function() {
+                if (this.pinky.isFolded()
+                        && this.ring.isFolded()
+                        && this.middle.isFolded()
+                        && this.index.isFolded()
+                        && this.thumb.isFolded()) {
+                        console.log("isO: all fingers are folded");
+                    if (this.thumb.tip.y - this.middle.tip.y < 40) {
+                        console.log("isO: middle finger and thumb are close");
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            //isP
+            //isQ
+            //isR
 
             Hand.prototype.isS = function() {
                 if (this.openness < 20) {
@@ -465,6 +540,80 @@
                 }
                 return false;
             };
+
+            //isT
+
+            Hand.prototype.isU = function() {
+                if (this.index.isPointedUp() && this.index.isVertical()){
+                    console.log("isU: index is pointed straight upward");
+                    if (this.middle.isPointedUp() && this.middle.isVertical()){
+                        console.log("isU: middle is pointed straight upward");
+                        if (this.pinky.isFolded()) {
+                            console.log("isV: pinky is folded");
+                            if (this.ring.isFolded()) {
+                                console.log("isV: ring is folded");
+                                if (this.thumb.isFolded()) {
+                                    console.log("isV: thumb is folded");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+           Hand.prototype.isV = function() {
+                if(this.middle.isPointedUp()){
+                    console.log("isV: middle finger is pointed upward");
+                    if(this.index.isPointedUp()) {
+                        console.log("isV: index finger is pointed upward");
+                        if (this.index.tip.x - this.middle.tip.x > 90) {
+                            console.log("isV: index and middle finger form a V shape");
+                            if (this.thumb.isFolded() && !this.thumb.isVertical()) {
+                                console.log("isV: thumb is folded");
+                                if (this.ring.isFolded()) {
+                                    console.log("isV: ring is folded");
+                                    if (this.pinky.isFolded()) {
+                                        console.log("isV: pinky is folded");
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+            Hand.prototype.isW = function() {
+                if(this.middle.isPointedUp()){
+                    console.log("isW: middle finger is pointed upward");
+                    if(this.index.isPointedUp()) {
+                        console.log("isW: index finger is pointed upward");
+                        if(this.ring.isPointedUp()) {
+                            console.log("isW: ring finger is pointed upward");
+                            if (Math.abs(this.index.tip.x - this.middle.tip.x) > 65
+                                    && Math.abs(this.middle.tip.x - this.ring.tip.x) > 65) {
+                                console.log("isW: index, middle and ring finger form a W shape");
+                                if (this.thumb.isFolded() && !this.thumb.isVertical()) {
+                                    console.log("isW: thumb is folded");
+                                    if (this.pinky.isFolded()) {
+                                        console.log("isW: pinky is folded");
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+            //isX
+            //isY
+            //isZ
+
 
         });
     </script>
